@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { WorkflowSchema } from "./schema";
+import { DBNodeSchema, DBTriggerSchema, WorkflowSchema } from "./schema";
 
 const UserSchema = new mongoose.Schema({
     username: String,
@@ -11,3 +11,7 @@ const UserSchema = new mongoose.Schema({
 export const Workflows = mongoose.model('workflows',WorkflowSchema)
 
  export  const Users =  mongoose.model('users',UserSchema)
+
+ export const Triggers = mongoose.model('triggers',DBTriggerSchema)
+
+ export const Nodes = mongoose.model('nodes',DBNodeSchema)

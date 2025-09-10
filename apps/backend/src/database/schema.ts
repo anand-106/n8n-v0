@@ -1,4 +1,6 @@
+import { v4 as uuidv4 } from 'uuid';
 import {Document,Schema} from 'mongoose'
+
 
 export interface IConnection {
     source:{
@@ -17,6 +19,20 @@ export interface Inode {
     name: string;
     type: string;
     position: [number,number];
+    parameters? : Record<string,any>;
+    credentials? : Record<string,any>;
+}
+
+export interface DBTrigger extends Document {
+    name: string;
+    type: string;
+    parameters? : Record<string,any>;
+    credentials? : Record<string,any>;
+}
+
+export interface DBNode extends Document {
+    name: string;
+    type: string;
     parameters? : Record<string,any>;
     credentials? : Record<string,any>;
 }
@@ -53,10 +69,24 @@ export const NodeSchema = new Schema<Inode>({
 })
 
 export const WorkflowSchema = new Schema<Iworkflow>({
-    id:{type:String,unique:true,required:true},
+    id:{type:String,unique:true,required:true,default: () => `wf_${uuidv4().slice(0,8)}`},
     userId:{type:String,required:true},
     title:String,
     enabled:Boolean,
     nodes:[NodeSchema],
     connections:[ConnectionSchema]
+})
+
+export const DBTriggerSchema = new Schema<DBTrigger>({
+    name:String,
+    type:String,
+    parameters: Schema.Types.Mixed,
+    credentials: Schema.Types.Mixed
+})
+
+export const DBNodeSchema = new Schema<DBNode>({
+    name:String,
+    type:String,
+    parameters: Schema.Types.Mixed,
+    credentials: Schema.Types.Mixed
 })

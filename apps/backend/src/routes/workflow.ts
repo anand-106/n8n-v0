@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Workflows } from "../database/model";
+import { Nodes, Triggers, Workflows } from "../database/model";
 
 
 const router:Router =  Router()
@@ -44,6 +44,48 @@ router.get('/:id',async(req,res)=>{
         res.status(500).json({message:"error getting workflow"})
     }
 
+})
+
+router.post('/node',async(req,res)=>{
+    try{
+        await Nodes.create(req.body)
+        res.json({message:"node created successfully"})
+    }catch(e){
+        console.error("error creating node ",e)
+    }
+})
+
+router.get('/node/get',async (req,res)=>{
+    try{
+
+        const nodes = await Nodes.find()
+
+        res.json({nodes})
+    }catch(e){
+        console.log(e)
+        res.status(500).json({message:"error getting nodes"})
+    }
+})
+
+router.post('/trigger',async(req,res)=>{
+    try{
+        await Triggers.create(req.body)
+        res.json({message:"Trigger created successfully"})
+    }catch(e){
+        console.error("error creating Trigger ",e)
+    }
+})
+
+router.get('/trigger/get',async (req,res)=>{
+    try{
+
+        const nodes = await Triggers.find()
+
+        res.json({nodes})
+    }catch(e){
+        console.log(e)
+        res.status(500).json({message:"error getting Triggers"})
+    }
 })
 
 
