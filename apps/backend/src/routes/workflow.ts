@@ -11,7 +11,7 @@ router.post('/',async(req,res)=>{
         const workflow = await Workflows.create({...req.body,userId:(req as any).userId})
         console.log("workflow created ")
         
-        res.json({message:"workflow created"})
+        res.json({message:"workflow created",id:workflow.id})
     }catch(e){
         console.error(e)
         res.status(500).json({message:"error creating workflow"})
@@ -31,6 +31,22 @@ router.get('/',async (req,res)=>{
 })
 
 router.get('/:id',async(req,res)=>{
+    const {id} = req.params
+
+    try{
+        const workflow = await Workflows.findOne({id:id})
+
+        if(!workflow) return res.status(404).json({message:"workflow not found"})
+
+        res.json(workflow)
+    }catch(e){
+        console.log(e)
+        res.status(500).json({message:"error getting workflow"})
+    }
+
+})
+
+router.put('/:id',async(req,res)=>{
     const {id} = req.params
 
     try{

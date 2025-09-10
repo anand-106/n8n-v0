@@ -28,3 +28,17 @@ export interface Iworkflow extends Document{
     nodes?: Inode[]
     connections?: IConnection[]
 }
+
+export interface DBTrigger extends Document {
+    name: string;
+    type: string;
+    parameters? : Record<string,unknown>;
+    credentials? : Record<string,unknown>;
+}
+
+export interface DBNode extends Document {
+    name: string;
+    type: string;
+    parameters? : Record<string,unknown>;
+    credentials? : Record<string,unknown>;
+}

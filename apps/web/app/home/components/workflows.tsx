@@ -4,10 +4,12 @@ import axios from "axios"
 import { Iworkflow } from "../types"
 import {useEffect, useState} from 'react'
 import { useRouter } from "next/navigation"
+import { CreateWF } from "./createWF"
 
 export default function Workflows(){
 
     const [workflows,setWorkflows] = useState<Iworkflow[]>([])
+    const [showCreateWf,setShowCreateWf] = useState(false)
 
     const getWorkflows = ()=>{
         axios.get('http://localhost:4000/workflow/',{
@@ -25,9 +27,14 @@ export default function Workflows(){
 
     const router = useRouter()
 
-    return <div className="bg-[#2d2f2e] h-full w-full">
+    return <div className="bg-[#2d2f2e] h-full w-full relative">
+        {showCreateWf&&<div className="absolute left-1/2 top-1/2"><CreateWF /> </div>}
         <div className="h-[100px] flex items-center justify-between p-10">
-            <button className="text-[#d67062] border-[#d67062] border-b-2 cursor-pointer">Workflows</button> <button className="w-30 h-8 text-sm rounded-md bg-[#d67062] text-white cursor-pointer" >Create Workflow</button>
+            <button className="text-[#d67062] border-[#d67062] border-b-2 cursor-pointer"
+            
+            >Workflows</button> <button className="w-30 h-8 text-sm rounded-md bg-[#d67062] text-white cursor-pointer"
+            onClick={()=>{setShowCreateWf(true)}}
+            >Create Workflow</button>
         </div>
         <div className="">
             {
