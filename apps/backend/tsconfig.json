@@ -1,0 +1,24 @@
+{
+    "extends": "../../packages/typescript-config/base.json",
+    "compilerOptions": {
+      "outDir": "./dist",
+      "rootDir": "./src",
+      "module": "CommonJS",
+      "target": "ES2020",
+      "moduleResolution": "node",
+      "allowSyntheticDefaultImports": true,
+      "esModuleInterop": true,
+      "forceConsistentCasingInFileNames": true,
+      "noEmit": false
+    },
+    "include": [
+      "src/**/*"
+    ],
+    "exclude": [
+      "node_modules",
+      "dist"
+    ],
+    "ts-node": {
+      "esm": false
+    }
+  }
