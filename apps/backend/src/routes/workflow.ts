@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { Nodes, Triggers, Workflows } from "../database/model";
+import { executeWorkflow } from "../services/executionService";
 
 
 const router:Router =  Router()
@@ -50,14 +51,12 @@ router.put('/:id',async(req,res)=>{
     const {id} = req.params
 
     try{
-        const workflow = await Workflows.findOne({id:id})
-
-        if(!workflow) return res.status(404).json({message:"workflow not found"})
+        const workflow = await Workflows.replaceOne({id:id},req.body)
 
         res.json(workflow)
     }catch(e){
         console.log(e)
-        res.status(500).json({message:"error getting workflow"})
+        res.status(500).json({message:"error updating workflow"})
     }
 
 })
@@ -101,6 +100,24 @@ router.get('/trigger/get',async (req,res)=>{
     }catch(e){
         console.log(e)
         res.status(500).json({message:"error getting Triggers"})
+    }
+})
+
+router.post('/execute',async(req,res)=>{
+    const {id} = req.body
+
+    try{
+        const workflow = await Workflows.findOne({id:id})
+
+        if(!workflow) return res.status(404).json({message:"workflow not found"})
+
+
+            await executeWorkflow(workflow)
+
+        res.json({message:"workflow executed"})
+    }catch(e){
+        console.log(e)
+        res.status(500).json({message:"error getting workflow"})
     }
 })
 

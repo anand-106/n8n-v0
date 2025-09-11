@@ -37,6 +37,12 @@ export interface DBNode extends Document {
     credentials? : Record<string,any>;
 }
 
+export interface DBCredentials extends Document {
+    id: string;
+    type: string;
+    credentials? : Record<string,any>;
+}
+
 export interface Iworkflow extends Document{
 
     id: string;
@@ -78,6 +84,7 @@ export const WorkflowSchema = new Schema<Iworkflow>({
 })
 
 export const DBTriggerSchema = new Schema<DBTrigger>({
+    id:{type:String,unique:true,required:true,default: () => `tr_${uuidv4().slice(0,8)}`},
     name:String,
     type:String,
     parameters: Schema.Types.Mixed,
@@ -85,8 +92,15 @@ export const DBTriggerSchema = new Schema<DBTrigger>({
 })
 
 export const DBNodeSchema = new Schema<DBNode>({
+    id:{type:String,unique:true,required:true,default: () => `nd_${uuidv4().slice(0,8)}`},
     name:String,
     type:String,
     parameters: Schema.Types.Mixed,
+    credentials: Schema.Types.Mixed
+})
+
+export  const CredentialsSchema = new Schema<DBCredentials>({
+    id:{type:String,unique:true,required:true,default: () => `cr_${uuidv4().slice(0,8)}`},
+    type:String,
     credentials: Schema.Types.Mixed
 })

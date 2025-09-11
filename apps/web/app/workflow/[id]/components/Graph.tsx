@@ -17,8 +17,11 @@ import {
   type OnEdgesChange,
   type OnNodeDrag,
   type DefaultEdgeOptions,
+  OnNodesDelete,
+  OnEdgesDelete,
 } from "@xyflow/react";
-import { DBNode, Iworkflow } from "../../../home/types";
+import { DBNode, IConnection, INode, Iworkflow } from "../../../home/types";
+import { useParams } from "next/navigation";
 
 const initialNodes: Node[] = [
   //   { id: '1', data: { label: 'Node 1' }, position: { x: 5, y: 5 } },
@@ -44,8 +47,10 @@ const onNodeDrag: OnNodeDrag = (_, node) => {
 export function Graph({ workflowId }: { workflowId: string }) {
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
+  const params = useParams()
 
-  let workflow: Iworkflow;
+  const [workflow,setWorkflow] = useState<Iworkflow>()
+
 
   const getWorkflow = () => {
     const token = localStorage.getItem("token");
@@ -57,15 +62,16 @@ export function Graph({ workflowId }: { workflowId: string }) {
         },
       })
       .then((res) => {
-        workflow = res.data;
+         setWorkflow(res.data);
 
         const newNodes: Node[] = [];
 
-        workflow.nodes?.forEach((node) => {
+        res.data.nodes?.forEach((node:INode) => {
           newNodes.push({
             id: node.id,
             data: {
               label: node.name,
+              type: node.type
             },
             position: {
               x: node.position[0],
@@ -76,7 +82,7 @@ export function Graph({ workflowId }: { workflowId: string }) {
         setNodes(newNodes);
 
         const newEdges: Edge[] = [];
-        workflow.connections?.forEach((edge, index) => {
+        res.data.connections?.forEach((edge:IConnection, index:number) => {
           newEdges.push({
             id: `e${edge.source.node}-${edge.destination.node}-${index}`,
             source: edge.source.node,
@@ -96,24 +102,95 @@ export function Graph({ workflowId }: { workflowId: string }) {
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
     [setNodes]
   );
+
+  const onNodesDelete: OnNodesDelete = useCallback(
+    (deletedNodes) => {
+      console.log("Nodes deleted:", deletedNodes);
+    },
+    []
+  );
+
   const onEdgesChange: OnEdgesChange = useCallback(
     (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
     [setEdges]
   );
+
+  const onEdgesDelete: OnEdgesDelete = useCallback(
+    (deletedNodes) => {
+      console.log("Edges deleted:", deletedNodes);
+    },
+    []
+  );
+
   const onConnect: OnConnect = useCallback(
     (connection) => setEdges((eds) => addEdge(connection, eds)),
     [setEdges]
   );
 
-  return (
-    <div className="flex">
+
+  const SaveWf = ()=>{
+    if(!workflow) return console.log("workflow undefined")
+    const saveNodes: INode[] = [];
+    const saveEdges: IConnection[] = [];
+
+    nodes.forEach(node=>{
+      saveNodes.push({
+          id : node.id,
+          name : node.data.label as string,
+          type : node.data.type as string,
+          position : [node.position.x,node.position.y]
+          })
+      })
+
+
+      edges.forEach(edge=>{
+        saveEdges.push({
+          source:{
+           node : edge.source
+          },
+          destination:{
+            node: edge.target
+          }
+        })
+      })
+
+      console.log("the param id is ",params.id)
       
+
+      axios.put(`http://localhost:4000/workflow/${params.id}`,{
+        id: workflow.id,
+        userId: workflow.userId,
+        title : workflow.title,
+        enabled : workflow.enabled,
+        nodes : saveNodes,
+        connections : saveEdges
+      },{
+        headers:{
+          Authorization:`Bearer ${localStorage.getItem('token')}`
+        }
+      }).then(res=>{
+        console.log("Workflow updated",res)
+      }).catch(console.error)
+
+    }
+  
+
+
+  return (
+    <div className="flex flex-col">
+      <div className="w-full h-14"> <button onClick={()=>{
+        SaveWf()
+      }}>Save</button></div>
+      <div className="flex">
+
     <div style={{ width: "70vw", height: "70vh", backgroundColor: "white" }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
+        onNodesDelete={onNodesDelete}
         onEdgesChange={onEdgesChange}
+        onEdgesDelete={onEdgesDelete}
         onConnect={onConnect}
         onNodeDrag={onNodeDrag}
         fitView
@@ -124,6 +201,7 @@ export function Graph({ workflowId }: { workflowId: string }) {
     <div>
       <TriggersAndNodes setNodes={setNodes} />
     </div>
+        </div>
     </div>
   );
 }

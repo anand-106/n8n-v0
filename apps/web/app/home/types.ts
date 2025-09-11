@@ -10,7 +10,7 @@ export interface IConnection {
     index?:string;
 }
 
-export interface Inode {
+export interface INode {
     id: string;
     name: string;
     type: string;
@@ -25,7 +25,7 @@ export interface Iworkflow extends Document{
     userId:string
     title: string;
     enabled: boolean;
-    nodes?: Inode[]
+    nodes?: INode[]
     connections?: IConnection[]
 }
 
