@@ -18,6 +18,7 @@ export interface Inode {
     id: string;
     name: string;
     type: string;
+    code: string;
     position: [number,number];
     parameters? : Record<string,any>;
     credentials? : Record<string,any>;
@@ -26,6 +27,7 @@ export interface Inode {
 export interface DBTrigger extends Document {
     name: string;
     type: string;
+    code: string;
     parameters? : Record<string,any>;
     credentials? : Record<string,any>;
 }
@@ -33,6 +35,7 @@ export interface DBTrigger extends Document {
 export interface DBNode extends Document {
     name: string;
     type: string;
+    code: string;
     parameters? : Record<string,any>;
     credentials? : Record<string,any>;
 }
@@ -69,6 +72,7 @@ export const NodeSchema = new Schema<Inode>({
     id: {type:String,required:true},
     name: String,
     type: String,
+    code: String,
     position: {type:[Number],required:true},
     parameters: Schema.Types.Mixed,
     credentials: Schema.Types.Mixed
@@ -86,6 +90,7 @@ export const WorkflowSchema = new Schema<Iworkflow>({
 export const DBTriggerSchema = new Schema<DBTrigger>({
     id:{type:String,unique:true,required:true,default: () => `tr_${uuidv4().slice(0,8)}`},
     name:String,
+    code: String,
     type:String,
     parameters: Schema.Types.Mixed,
     credentials: Schema.Types.Mixed
@@ -94,6 +99,7 @@ export const DBTriggerSchema = new Schema<DBTrigger>({
 export const DBNodeSchema = new Schema<DBNode>({
     id:{type:String,unique:true,required:true,default: () => `nd_${uuidv4().slice(0,8)}`},
     name:String,
+    code: String,
     type:String,
     parameters: Schema.Types.Mixed,
     credentials: Schema.Types.Mixed
