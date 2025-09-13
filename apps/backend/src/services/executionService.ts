@@ -1,7 +1,7 @@
 import { Iworkflow,Inode } from "../database/schema";
 import { v4 as uuidv4 } from "uuid";
 
-interface ExecutionContext {
+export interface ExecutionContext {
     // Execution metadata
     executionId: string;
     workflowId: string;
