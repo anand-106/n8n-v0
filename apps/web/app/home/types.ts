@@ -14,6 +14,7 @@ export interface INode {
     id: string;
     name: string;
     type: string;
+    code: string;
     position: [number,number];
     parameters? : Record<string,unknown>;
     credentials? : Record<string,unknown>;
@@ -29,6 +30,20 @@ export interface Iworkflow extends Document{
     connections?: IConnection[]
 }
 
+export interface ParameterSchema {
+    type: 'string'| 'number' | 'boolean';
+    required: boolean;
+    label?: string;
+    placeholder?:string;
+}
+
+export interface CredentialSchema {
+    type: 'username'| 'password' | 'number' | 'boolean';
+    required: boolean;
+    label?: string;
+    placeholder?:string;
+}
+
 export interface DBTrigger extends Document {
     name: string;
     type: string;
@@ -38,7 +53,8 @@ export interface DBTrigger extends Document {
 
 export interface DBNode extends Document {
     name: string;
+    code:string;
     type: string;
-    parameters? : Record<string,unknown>;
-    credentials? : Record<string,unknown>;
+    parameters? : Record<string,ParameterSchema>;
+    credentials? : Record<string,CredentialSchema>;
 }

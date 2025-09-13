@@ -24,14 +24,6 @@ export interface Inode {
     credentials? : Record<string,any>;
 }
 
-export interface DBTrigger extends Document {
-    name: string;
-    type: string;
-    code: string;
-    parameters? : Record<string,any>;
-    credentials? : Record<string,any>;
-}
-
 export interface DBNode extends Document {
     name: string;
     type: string;
@@ -85,15 +77,6 @@ export const WorkflowSchema = new Schema<Iworkflow>({
     enabled:Boolean,
     nodes:[NodeSchema],
     connections:[ConnectionSchema]
-})
-
-export const DBTriggerSchema = new Schema<DBTrigger>({
-    id:{type:String,unique:true,required:true,default: () => `tr_${uuidv4().slice(0,8)}`},
-    name:String,
-    code: String,
-    type:String,
-    parameters: Schema.Types.Mixed,
-    credentials: Schema.Types.Mixed
 })
 
 export const DBNodeSchema = new Schema<DBNode>({

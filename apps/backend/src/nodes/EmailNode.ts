@@ -9,15 +9,21 @@ export class EmailNode {
         return {
             to:{
                 type: 'string',
-                required: true
+                required: true,
+                label:'To',
+                placeholder:'Enter E-mail'
             },
             subject:{
                 type: 'string',
-                required: true
+                required: true,
+                label:'Subject',
+                placeholder:'Enter Subject'
             },
             body: {
                 type: 'string',
                 required:true,
+                label: 'Body',
+                placeholder: 'Enter body'
             }
         }
     }
@@ -26,22 +32,25 @@ export class EmailNode {
         return {
             user: {
                 type:'username',
-                required:true
+                required:true,
+                label:'User',
+                placeholder:'Enter gmail user'
             },
             pass:{
                 type:'password',
-                required:true
+                required:true,
+                label:'App password',
+                placeholder: 'Enter gmail app password'
             }
         }
     }
 
     async execute(
         parameters: Record<string,any>,
-        credentials: Record<string,any>,
-        context: ExecutionContext
+        credentials: Record<string,any>
     ) :Promise<{success:boolean}> {
         const {to,subject,body} = parameters
-        const {user, password} = credentials
+        const {user, pass} = credentials
 
         try{
 
@@ -50,7 +59,7 @@ export class EmailNode {
                 service:"gmail",
                 auth:{
                     user:user,
-                    pass:password
+                    pass:pass
                 }
             })
             

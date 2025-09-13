@@ -1,5 +1,8 @@
 import { Iworkflow,Inode } from "../database/schema";
 import { v4 as uuidv4 } from "uuid";
+import { nodeQueue, nodeWorker } from "./queue";
+import { Workflows } from "../database/model";
+import { NodeRegistry } from "./nodeRegistry";
 
 export interface ExecutionContext {
     // Execution metadata
@@ -14,8 +17,8 @@ export interface ExecutionContext {
     // variables: Record<string, any>;   // User-defined variables
     
     // Execution state
-    completedNodes: Set<string>;
-    failedNodes: Set<string>;
+    // completedNodes: Set<string>;
+    // failedNodes: Set<string>;
     
     // // Configuration
     // settings: {
@@ -32,45 +35,56 @@ export async function executeWorkflow(workflow:Iworkflow){
 
     
 
-    const startNode = nodes?.find(node=>node.type=='TRIGGER')
+    const startNode = nodes?.find(node=>node.type=='trigger')
 
     if (!startNode) {
         console.error("No TRIGGER node found in workflow");
         throw new Error("No TRIGGER node found in workflow");
     }
 
+    const executionId = uuidv4()
+
     const State :ExecutionContext={
-        executionId: uuidv4(),
+        executionId: executionId,
         workflowId: workflow.id,
         userId: workflow.userId,
         startTime: new Date(),
-
-        completedNodes:new Set(),
-        failedNodes:new Set(),
     }
-  await  executeFromNode(startNode!,workflow,State)
+  await  executeFromNode(startNode!,workflow,executionId)
 
 }
 
-export async function executeFromNode(currentNode:Inode,Workflow:Iworkflow,state:ExecutionContext){
+export async function executeFromNode(currentNode:Inode,Workflow:Iworkflow,executionId: string){
 
-   await executeNode(currentNode.id)
+   await nodeQueue.add("executeNode",{
+    executionId: executionId,
+    workflowId: Workflow.id,
+    nodeId: currentNode.id,
+})
 
-    const outgoingEdges = Workflow.connections?.filter(edge=>edge.source.node===currentNode.id)||[]
-    for(const edge of outgoingEdges){
-        const nextNode = Workflow.nodes?.find(node=>node.id===edge.destination.node)
+    
+   
 
-        if(nextNode){
-          await  executeFromNode(nextNode,Workflow,state)
-        }
-        else{
-            console.log("next node not found")
-        }
-    }
+    
 
 }
 
 
-export async function executeNode(nodeId:string){
+export async function executeNode(nodeId:string,workflowId:string,executionId:string){
     console.log("executing node",nodeId)
+    const workflow = await Workflows.findOne({id:workflowId})
+
+    const node = workflow?.nodes?.find(nd=>nd.id===nodeId)
+
+   const NodeClass = NodeRegistry[node?.code ?? ""]
+
+   if(!NodeClass){
+    console.log("Unknown node type")
+   }
+
+   const nodeInstance = new NodeClass();
+
+   await nodeInstance.execute(node?.parameters,node?.credentials)
+
+
 }

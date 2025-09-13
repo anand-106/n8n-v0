@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Nodes, Triggers, Workflows } from "../database/model";
+import { Nodes, Workflows } from "../database/model";
 import { executeWorkflow } from "../services/executionService";
 
 
@@ -82,26 +82,7 @@ router.get('/node/get',async (req,res)=>{
     }
 })
 
-router.post('/trigger',async(req,res)=>{
-    try{
-        await Triggers.create(req.body)
-        res.json({message:"Trigger created successfully"})
-    }catch(e){
-        console.error("error creating Trigger ",e)
-    }
-})
 
-router.get('/trigger/get',async (req,res)=>{
-    try{
-
-        const nodes = await Triggers.find()
-
-        res.json({nodes})
-    }catch(e){
-        console.log(e)
-        res.status(500).json({message:"error getting Triggers"})
-    }
-})
 
 router.post('/execute',async(req,res)=>{
     const {id} = req.body

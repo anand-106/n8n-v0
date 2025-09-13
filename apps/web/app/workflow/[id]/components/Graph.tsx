@@ -22,6 +22,7 @@ import {
 } from "@xyflow/react";
 import { DBNode, IConnection, INode, Iworkflow } from "../../../home/types";
 import { useParams } from "next/navigation";
+import ParameterForm from "./parameterForm";
 
 const initialNodes: Node[] = [
   //   { id: '1', data: { label: 'Node 1' }, position: { x: 5, y: 5 } },
@@ -138,7 +139,10 @@ export function Graph({ workflowId }: { workflowId: string }) {
           id : node.id,
           name : node.data.label as string,
           type : node.data.type as string,
-          position : [node.position.x,node.position.y]
+          code : node.data.code as string,
+          position : [node.position.x,node.position.y],
+          parameters: node.data.parameters as Record<string, unknown> | undefined,
+          credentials: node.data.credentials as Record<string, unknown> | undefined
           })
       })
 
@@ -209,9 +213,11 @@ export function Graph({ workflowId }: { workflowId: string }) {
 function TriggersAndNodes({setNodes}:{setNodes:React.Dispatch<React.SetStateAction<Node[]>>}) {
 const [Nodes,SetNodes] = useState<DBNode[]>([])
 const [selectedNodeType,setSelectedNodeType] = useState<string>('trigger')
+const [addingNode,setAddingNode] = useState<boolean>(false);
+const [selectedNode,setSelectedNode] = useState<DBNode>()
 
   const getNodes = () =>{
-    axios.get(`http://localhost:4000/workflow/${selectedNodeType}/get`,{
+    axios.get(`http://localhost:4000/workflow/node/get`,{
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       }
@@ -238,17 +244,39 @@ const [selectedNodeType,setSelectedNodeType] = useState<string>('trigger')
         >Nodes</button>
       </div>
       <div className="flex flex-col w-full">
+
         {
-          Nodes.map((node,idx)=>{
-            return <div key={idx} className="w-full p-3 cursor-pointer"
-            onClick={()=>{
-              setNodes((prev)=>([...prev,{ id: `nd_${uuidv4().slice(0,8)}`, data: { label: node.name }, position: { x: 5, y: 5 } }]))
-            }}
-            >
+          addingNode?(<ParameterForm setAddingNode={setAddingNode} setNodes={setNodes} selectedNode={selectedNode}/>):(
+
+            Nodes.map((node,idx)=>{
+              if(node.type=='node' && selectedNodeType=='node'){
+                
+                return <div key={idx} className="w-full p-3 cursor-pointer"
+              onClick={()=>{
+                //setNodes((prev)=>([...prev,{ id: `nd_${uuidv4().slice(0,8)}`, data: { label: node.name }, position: { x: 5, y: 5 } }]))
+                setSelectedNode(node)
+                setAddingNode(true)
+              }}
+              >
                 <h1>{node.name}</h1>
-                <h2>{node.type}</h2>
+                <h2>{node.code}</h2>
             </div>
+            }
+            if(node.type=='trigger' && selectedNodeType=='trigger'){
+              
+              return <div key={idx} className="w-full p-3 cursor-pointer"
+              onClick={()=>{
+                //setNodes((prev)=>([...prev,{ id: `nd_${uuidv4().slice(0,8)}`, data: { label: node.name }, position: { x: 5, y: 5 } }]))
+                setSelectedNode(node)
+                setAddingNode(true)
+              }}
+              >
+                <h1>{node.name}</h1>
+                <h2>{node.code}</h2>
+            </div>
+            }
           })
+        )
         }
       </div>
     </div>
