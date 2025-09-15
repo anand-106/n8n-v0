@@ -77,6 +77,9 @@ export function Graph({ workflowId }: { workflowId: string }) {
             data: {
               label: node.name,
               type: node.type,
+              code: node.code,
+              parameters: node.parameters,
+              credentials: node.credentials
             },
             position: {
               x: node.position[0],

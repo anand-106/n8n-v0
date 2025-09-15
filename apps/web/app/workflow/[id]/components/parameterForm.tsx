@@ -29,13 +29,13 @@ export default function ParameterForm({
   };
 
   return (
-    <div>
+    <div className="p-3">
       {selectedNode?.parameters && (
-        <div>
-          <h1>Parameters</h1>
+        <div >
+          <h1 className="text-lg font-bold">Parameters</h1>
           {Object.entries(selectedNode.parameters).map(([key, param], idx) => (
-            <div key={idx}>
-              <h3>{param.label}</h3>
+            <div className="flex flex-col p-2" key={idx}>
+              <h3 className="text-sm font-bold">{param.label}</h3>
               <input
                 placeholder={param.placeholder}
                 onChange={(e) => {
@@ -47,10 +47,10 @@ export default function ParameterForm({
               />
             </div>
           ))}
-          <h1>Credentials</h1>
+          <h1 className="text-lg font-bold">Credentials</h1>
           {Object.entries(selectedNode.credentials!).map(([key, param], idx) => (
-            <div key={idx}>
-              <h3>{param.label}</h3>
+            <div className="flex flex-col p-2" key={idx}>
+              <h3 className="text-sm font-bold">{param.label}</h3>
               <input
                 placeholder={param.placeholder}
                 onChange={(e) => {
@@ -64,13 +64,18 @@ export default function ParameterForm({
           ))}
         </div>
       )}
+      <div className="flex justify-center"> 
+
       <button
         onClick={() => {
           handleParameterSubmit();
         }}
-      >
+        className="cursor-pointer bg-[#ef4e39] text-white px-3 py-1  rounded-md font-semibold"
+        
+        >
         Submit
       </button>
+        </div>
     </div>
   );
 }

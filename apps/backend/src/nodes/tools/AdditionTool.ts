@@ -1,14 +1,14 @@
 
 import { DynamicTool } from "@langchain/core/tools";
 
-export const multiplyTool = new DynamicTool({
-  name: "MultiplyTool",
-  description: "Multiplies two numbers. Provide JSON: {\"a\": number, \"b\": number}",
+export const AdditionTool = new DynamicTool({
+  name: "AdditionTool",
+  description: "Adds two numbers. Provide JSON: {\"a\": number, \"b\": number}",
   func: async (input: string) => {
     try {
-      console.log("multiply agent hit")
+      console.log("Addition agent hit")
       const { a, b } = JSON.parse(input);
-      const result = Number(a) * Number(b);
+      const result = Number(a) + Number(b);
       if (Number.isNaN(result)) throw new Error("Invalid numbers");
       return String(result);
     } catch {

@@ -1,49 +1,38 @@
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
-import { createReactAgent, AgentExecutor } from "langchain/agents";
-import { ChatPromptTemplate } from "@langchain/core/prompts";
+import {HumanMessage} from '@langchain/core/messages'
+import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { multiplyTool } from "./tools/MultiplyTool";
+import { AdditionTool } from "./tools/AdditionTool";
 
 export class AgentNode {
   async execute(
     parameters: Record<string, any>,
     credentials: Record<string, any>
   ) {
-    const { model } = parameters;
-    // const { apiKey } = credentials;
-
-    const apiKey = 'AIzaSyB9vTLgvbJWcOXLbl7UNqCcSx05brtrcjw'
+    const { modelName } = parameters;
+    const { apiKey } = credentials;
 
     const llm = new ChatGoogleGenerativeAI({
-      model: model?.modelName || "gemini-2.0-flash",
+      model: modelName || "gemini-2.0-flash",
       apiKey: apiKey,
       temperature: 0,
     });
 
-    const tools = [multiplyTool];
+    const tools = [multiplyTool,AdditionTool];
 
-    const prompt = ChatPromptTemplate.fromTemplate(
-      "You are an agent. Use the tools available to answer the user's query: {input}"
-    );
 
-    const agent = await createReactAgent({
+    const agent = createReactAgent({
         llm,
-        tools,
-        prompt,
+        tools
       });
 
-      const agentExecutor = new AgentExecutor({
-        agent,
-        tools,
+      const response = await agent.invoke({
+        messages: [new HumanMessage("add 6 and 7 and multiply by 2")],
       });
+
       
-      const response = await agentExecutor.invoke({
-        input: "Multiply 6 and 7 using MultiplyTool"
-      });
       
-      console.log("Agent response:", response.output);
+      console.log("Agent response:", response.messages[response.messages.length - 1]!.content);
   }
 }
 
-const agent = new AgentNode()
-
-agent.execute({},{})
