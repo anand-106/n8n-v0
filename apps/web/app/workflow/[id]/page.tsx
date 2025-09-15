@@ -32,7 +32,7 @@ function Execute(){
         }).catch(console.error)
     }
 
-    return<div>
-        <button className="cursor-pointer" onClick={handleExecute} >Execute Workflow</button>
+    return<div className="bg-[#2d2f2e] w-[70vw] h-[53px] flex justify-center items-center ml-4 rounded-b-lg">
+        <button className="cursor-pointer bg-[#ef4e39] text-white p-2 rounded-md font-semibold" onClick={handleExecute} >Execute Workflow</button>
     </div>
 }
