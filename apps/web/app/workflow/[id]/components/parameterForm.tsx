@@ -15,11 +15,6 @@ export default function ParameterForm({
   const [parametersList, setParametersList] = useState<Record<string, any>>({});
   const [credentialsList, setCredentialsList] =  useState<Record<string, any>>({});
 
-  const NodeTypes ={
-    AGENT :'agent',
-    
-  }
-
   const handleParameterSubmit = () => {
     setNodes((prev) => [
       ...prev,
@@ -53,21 +48,25 @@ export default function ParameterForm({
               />
             </div>
           ))}
-          <h1 className="text-lg font-bold">Credentials</h1>
-          {Object.entries(selectedNode.credentials!).map(([key, param], idx) => (
-            <div className="flex flex-col p-2" key={idx}>
-              <h3 className="text-sm font-bold">{param.label}</h3>
-              <input
-                placeholder={param.placeholder}
-                onChange={(e) => {
-                  setCredentialsList((prev) => ({
-                    ...prev,
-                    [key]: e.target.value,
-                  }));
-                }}
-              />
-            </div>
-          ))}
+          {selectedNode?.credentials && (
+            <>
+              <h1 className="text-lg font-bold">Credentials</h1>
+              {Object.entries(selectedNode.credentials).map(([key, param], idx) => (
+                <div className="flex flex-col p-2" key={idx}>
+                  <h3 className="text-sm font-bold">{param.label}</h3>
+                  <input
+                    placeholder={param.placeholder}
+                    onChange={(e) => {
+                      setCredentialsList((prev) => ({
+                        ...prev,
+                        [key]: e.target.value,
+                      }));
+                    }}
+                  />
+                </div>
+              ))}
+            </>
+          )}
         </div>
       )}
       <div className="flex justify-center"> 

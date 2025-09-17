@@ -5,13 +5,17 @@ export function AgentNode({data}:NodeProps){
 
     return <div className="bg-slate-800 text-white py-2 px-4 rounded-xl border border-white">
 
-        <Handle type="target" position={Position.Left} style={{ background: '#4cafef' }} />
+        <Handle id='input' type="target" position={Position.Left} style={{ background: '#4cafef' }}
+        isValidConnection={(connection)=>connection.sourceHandle==='output'}
+        />
         
         <h1 className="text-sm font-semibold">
             {String(data.label)}
         </h1>
       
-      <Handle type="source" position={Position.Right} style={{ background: '#4cafef' }} />
+      <Handle id='output' type="source" position={Position.Right} style={{ background: '#4cafef' }}
+      isValidConnection={(connection)=>connection.targetHandle==='input'}
+      />
 
       <Handle 
       id='model-input'
@@ -22,11 +26,11 @@ export function AgentNode({data}:NodeProps){
       />
 
     <Handle 
-      id='tool-input'
-      type="target"
+      id='tool-output'
+      type="source"
       position={Position.Bottom}
       style={{left:'75%' ,width:'7px', height:'7px'}}
-      isValidConnection={(connection)=>connection.sourceHandle==='tool-output'}
+      isValidConnection={(connection)=>connection.targetHandle==='tool-input'}
       onClick={()=> {(data as any ).onSelectTool() }}
       />
 

@@ -35,7 +35,7 @@ export function TriggersAndNodes({
       getNodes();
     }, [selectedNodeType]);
   
-    return isSelectingTool? <ToolFunction nodes={Nodes} setIsSelectingTool={setIsSelectingTool} />:(
+    return isSelectingTool? <ToolFunction nodes={Nodes} setIsSelectingTool={setIsSelectingTool} setNodes={setNodes} />:(
 
       <div className="w-full h-full text-white">
       <div className="flex w-full p-3 items-center">

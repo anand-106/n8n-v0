@@ -76,6 +76,16 @@ export async function executeNode(nodeId:string,workflowId:string,executionId:st
 
     const node = workflow?.nodes?.find(nd=>nd.id===nodeId)
 
+    if(node?.type=='tool') return console.log(`Reached ${node.name}, and returning`)
+
+    if(node?.type=='agent'){
+      const outgoing = workflow?.connections?.filter(edge=>edge.source.node == node.id)
+
+      const tools = outgoing?.map(c=>workflow?.nodes?.find(nd=>nd.id==c.destination.node))
+
+      console.log(tools)
+    }
+
    const NodeClass = NodeRegistry[node?.code ?? ""]
 
    if(!NodeClass){

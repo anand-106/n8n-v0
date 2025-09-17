@@ -32,6 +32,7 @@ export function Graph({ workflowId }: { workflowId: string }) {
 
   const [workflow, setWorkflow] = useState<Iworkflow>();
 
+
   const getWorkflow = () => {
     const token = localStorage.getItem("token");
 
@@ -49,7 +50,7 @@ export function Graph({ workflowId }: { workflowId: string }) {
         res.data.nodes?.forEach((node: INode) => {
           newNodes.push({
             id: node.id,
-            type: node.code=='AGENT'?'agent':'dark',
+            type: node.type,
             data: {
               label: node.name,
               type: node.type,
@@ -72,6 +73,8 @@ export function Graph({ workflowId }: { workflowId: string }) {
             id: `e${edge.source.node}-${edge.destination.node}-${index}`,
             source: edge.source.node,
             target: edge.destination.node,
+            sourceHandle: edge.source.type,
+            targetHandle: edge.destination.type
           });
         });
         setEdges(newEdges);
@@ -112,6 +115,7 @@ export function Graph({ workflowId }: { workflowId: string }) {
     const saveEdges: IConnection[] = [];
 
     nodes.forEach((node) => {
+
       saveNodes.push({
         id: node.id,
         name: node.data.label as string,
@@ -129,9 +133,11 @@ export function Graph({ workflowId }: { workflowId: string }) {
       saveEdges.push({
         source: {
           node: edge.source,
+          type: edge.sourceHandle!
         },
         destination: {
           node: edge.target,
+          type: edge.targetHandle!
         },
       });
     });

@@ -1,8 +1,9 @@
 import { DefaultEdgeOptions, Edge, FitViewOptions, OnNodeDrag, type Node } from "@xyflow/react";
 import DarkNode from "../DarkNode";
 import { AgentNode } from "../AgentNode";
+import { ToolNode } from "../ToolNode";
 
-export const nodeTypes = { dark: DarkNode ,agent: AgentNode};
+export const nodeTypes= { node: DarkNode ,trigger:DarkNode,agent: AgentNode,tool:ToolNode};
 
 export const initialNodes: Node[] = [
   //   { id: '1', data: { label: 'Node 1' }, position: { x: 5, y: 5 } },
