@@ -2,7 +2,6 @@
 
 import { useState, useCallback, useEffect } from "react";
 import Image from 'next/image';
-import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import "@xyflow/react/dist/style.css";
 import {
@@ -12,46 +11,23 @@ import {
   applyEdgeChanges,
   type Node,
   type Edge,
-  type FitViewOptions,
   type OnConnect,
   type OnNodesChange,
   type OnEdgesChange,
-  type OnNodeDrag,
-  type DefaultEdgeOptions,
   OnNodesDelete,
   OnEdgesDelete,
 } from "@xyflow/react";
-import { DBNode, IConnection, INode, Iworkflow } from "../../../home/types";
+import { IConnection, INode, Iworkflow } from "../../../home/types";
 import { useParams } from "next/navigation";
-import ParameterForm from "./parameterForm";
-import DarkNode from "./DarkNode";
+import { initialNodes, initialEdges, nodeTypes, fitViewOptions, defaultEdgeOptions, onNodeDrag } from "./utils/graphData";
+import { TriggersAndNodes } from "./TriggersAndNodes";
 
-const nodeTypes = { dark: DarkNode };
-
-const initialNodes: Node[] = [
-  //   { id: '1', data: { label: 'Node 1' }, position: { x: 5, y: 5 } },
-  //   { id: '2', data: { label: 'Node 2' }, position: { x: 5, y: 100 } },
-];
-
-const initialEdges: Edge[] = [
-  // { id: 'e1-2', source: '1', target: '2' }
-];
-
-const fitViewOptions: FitViewOptions = {
-  padding: 0.2,
-};
-
-const defaultEdgeOptions: DefaultEdgeOptions = {
-  animated: true,
-};
-
-const onNodeDrag: OnNodeDrag = (_, node) => {
-  console.log("drag event", node.data);
-};
 
 export function Graph({ workflowId }: { workflowId: string }) {
+  
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
+  const [isSelectingTool,setIsSelectingTool] = useState<boolean>(false)
   const params = useParams();
 
   const [workflow, setWorkflow] = useState<Iworkflow>();
@@ -73,13 +49,14 @@ export function Graph({ workflowId }: { workflowId: string }) {
         res.data.nodes?.forEach((node: INode) => {
           newNodes.push({
             id: node.id,
-            type: "dark",
+            type: node.code=='AGENT'?'agent':'dark',
             data: {
               label: node.name,
               type: node.type,
               code: node.code,
               parameters: node.parameters,
-              credentials: node.credentials
+              credentials: node.credentials,
+              onSelectTool: ()=> setIsSelectingTool(true)
             },
             position: {
               x: node.position[0],
@@ -193,7 +170,6 @@ export function Graph({ workflowId }: { workflowId: string }) {
           className="cursor-pointer bg-[#ef4e39] text-white px-3 py-1  rounded-md font-semibold"
           onClick={() => {
             SaveWf();
-
           }}
         >
           Save
@@ -221,103 +197,11 @@ export function Graph({ workflowId }: { workflowId: string }) {
           />
         </div>
         <div className="flex-1">
-          <TriggersAndNodes setNodes={setNodes} />
+          <TriggersAndNodes setIsSelectingTool={setIsSelectingTool} isSelectingTool={isSelectingTool} setNodes={setNodes} />
         </div>
       </div>
     </div>
   );
 }
 
-function TriggersAndNodes({
-  setNodes,
-}: {
-  setNodes: React.Dispatch<React.SetStateAction<Node[]>>;
-}) {
-  const [Nodes, SetNodes] = useState<DBNode[]>([]);
-  const [selectedNodeType, setSelectedNodeType] = useState<string>("trigger");
-  const [addingNode, setAddingNode] = useState<boolean>(false);
-  const [selectedNode, setSelectedNode] = useState<DBNode>();
 
-  const getNodes = () => {
-    axios
-      .get(`http://localhost:4000/workflow/node/get`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-      .then((res) => {
-        SetNodes(res.data.nodes);
-      });
-  };
-
-  useEffect(() => {
-    getNodes();
-  }, [selectedNodeType]);
-
-  return (
-    <div className="w-full h-full text-white">
-      <div className="flex w-full p-3 items-center">
-        <button
-          className={`w-1/2 text-xl font-bold cursor-pointer ${selectedNodeType == "trigger" ? " border-b-2 border-[#ef4e39]" : ""}`}
-          onClick={() => {
-            setSelectedNodeType("trigger");
-          }}
-        >
-          Triggers
-        </button>{" "}
-        <button
-          className={`w-1/2 text-xl font-bold cursor-pointer ${selectedNodeType == "node" ? " border-b-2 border-[#ef4e39]" : ""}`}
-          onClick={() => {
-            setSelectedNodeType("node");
-          }}
-        >
-          Nodes
-        </button>
-      </div>
-      <div className="flex flex-col w-full">
-        {addingNode ? (
-          <ParameterForm
-            setAddingNode={setAddingNode}
-            setNodes={setNodes}
-            selectedNode={selectedNode}
-          />
-        ) : (
-          Nodes.map((node, idx) => {
-            if (node.type == "node" && selectedNodeType == "node") {
-              return (
-                <div
-                  key={idx}
-                  className="w-full p-3 cursor-pointer"
-                  onClick={() => {
-                    //setNodes((prev)=>([...prev,{ id: `nd_${uuidv4().slice(0,8)}`, data: { label: node.name }, position: { x: 5, y: 5 } }]))
-                    setSelectedNode(node);
-                    setAddingNode(true);
-                  }}
-                >
-                  <h1>{node.name}</h1>
-                  <h2>{node.code}</h2>
-                </div>
-              );
-            }
-            if (node.type == "trigger" && selectedNodeType == "trigger") {
-              return (
-                <div
-                  key={idx}
-                  className="w-full p-3 cursor-pointer"
-                  onClick={() => {
-                    //setNodes((prev)=>([...prev,{ id: `nd_${uuidv4().slice(0,8)}`, data: { label: node.name }, position: { x: 5, y: 5 } }]))
-                    setSelectedNode(node);
-                    setAddingNode(true);
-                  }}
-                >
-                  <h1>{node.name}</h1>
-                  <h2>{node.code}</h2>
-                </div>
-              );
-            }
-          })
-        )}
-      </div>
-    </div>
-  );
-}

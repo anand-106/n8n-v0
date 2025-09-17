@@ -15,11 +15,17 @@ export default function ParameterForm({
   const [parametersList, setParametersList] = useState<Record<string, any>>({});
   const [credentialsList, setCredentialsList] =  useState<Record<string, any>>({});
 
+  const NodeTypes ={
+    AGENT :'agent',
+    
+  }
+
   const handleParameterSubmit = () => {
     setNodes((prev) => [
       ...prev,
       {
         id: `nd_${uuidv4().slice(0, 8)}`,
+        type: selectedNode?.code=='AGENT'?'agent':'',
         data: { label: selectedNode?.name,parameters: parametersList,credentials: credentialsList,type:selectedNode?.type,code:selectedNode?.code},
         position: { x: 5, y: 5 },
         
