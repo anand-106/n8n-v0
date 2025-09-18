@@ -1,7 +1,9 @@
-import { NodeProps,Position, Handle } from "@xyflow/react";
+import { NodeProps,Position, Handle, useStore } from "@xyflow/react";
 
 
-export function AgentNode({data}:NodeProps){
+export function AgentNode({data,id}:NodeProps){
+
+  const edges = useStore(state=> state.edges)
 
     return <div className="bg-slate-800 text-white py-2 px-4 rounded-xl border border-white">
 
@@ -22,7 +24,11 @@ export function AgentNode({data}:NodeProps){
       type="source"
       position={Position.Bottom}
       style={{left:'25%'}}
-      isValidConnection={(connection)=>connection.targetHandle==='model-input'}
+      isValidConnection={(connection)=>{
+        
+        const isConnected = edges.some(ed=>ed.source==id && ed.sourceHandle=='model-output')
+        
+        return !isConnected && connection.targetHandle==='model-input'}}
       onClick={()=> {(data as any ).onSelectModel() }}
       />
 

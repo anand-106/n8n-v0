@@ -2,8 +2,9 @@ import { DefaultEdgeOptions, Edge, FitViewOptions, OnNodeDrag, type Node } from 
 import DarkNode from "../nodes/DarkNode";
 import { AgentNode } from "../nodes/AgentNode";
 import { ToolNode } from "../nodes/ToolNode";
+import { ModelNode } from "../nodes/ModelNode";
 
-export const nodeTypes= { node: DarkNode ,trigger:DarkNode,agent: AgentNode,tool:ToolNode};
+export const nodeTypes= { node: DarkNode ,trigger:DarkNode,agent: AgentNode,tool:ToolNode, model:ModelNode};
 
 export const initialNodes: Node[] = [
   //   { id: '1', data: { label: 'Node 1' }, position: { x: 5, y: 5 } },

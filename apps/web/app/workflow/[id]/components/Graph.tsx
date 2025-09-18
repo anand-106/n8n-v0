@@ -108,7 +108,19 @@ export function Graph({ workflowId }: { workflowId: string }) {
   }, []);
 
   const onConnect: OnConnect = useCallback(
-    (connection) => setEdges((eds) => addEdge(connection, eds)),
+    (connection) => setEdges((eds) => {
+      if (connection.sourceHandle === "model-output") {
+        const alreadyConnected = eds.some(
+          (e) => e.source === connection.source && e.sourceHandle === "model-output"
+        );
+
+        if (alreadyConnected) {
+          return eds; 
+        }
+      }
+
+      return addEdge(connection, eds);
+    }),
     [setEdges]
   );
 
