@@ -1,6 +1,6 @@
 import React from 'react';
 import { Handle, Position, NodeProps } from '@xyflow/react';
-import '../styles/style.css'
+import '../../styles/style.css'
 
 const DarkNode: React.FC<NodeProps> = ({ data }) => {
   return (

@@ -20,7 +20,7 @@ import {
 import { IConnection, INode, Iworkflow } from "../../../home/types";
 import { useParams } from "next/navigation";
 import { initialNodes, initialEdges, nodeTypes, fitViewOptions, defaultEdgeOptions, onNodeDrag } from "./utils/graphData";
-import { TriggersAndNodes } from "./TriggersAndNodes";
+import { TriggersAndNodes } from "./panels/TriggersAndNodes";
 
 
 export function Graph({ workflowId }: { workflowId: string }) {
@@ -28,6 +28,8 @@ export function Graph({ workflowId }: { workflowId: string }) {
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
   const [isSelectingTool,setIsSelectingTool] = useState<boolean>(false)
+  const [isSelectingModel,setIsSelectingModel] = useState<boolean>(false)
+
   const params = useParams();
 
   const [workflow, setWorkflow] = useState<Iworkflow>();
@@ -57,7 +59,8 @@ export function Graph({ workflowId }: { workflowId: string }) {
               code: node.code,
               parameters: node.parameters,
               credentials: node.credentials,
-              onSelectTool: ()=> setIsSelectingTool(true)
+              onSelectTool: ()=> setIsSelectingTool(true),
+              onSelectModel: ()=> setIsSelectingModel(true)
             },
             position: {
               x: node.position[0],
@@ -203,7 +206,7 @@ export function Graph({ workflowId }: { workflowId: string }) {
           />
         </div>
         <div className="flex-1">
-          <TriggersAndNodes setIsSelectingTool={setIsSelectingTool} isSelectingTool={isSelectingTool} setNodes={setNodes} />
+          <TriggersAndNodes setIsSelectingModel={setIsSelectingModel} isSelectingModel={isSelectingModel} setIsSelectingTool={setIsSelectingTool} isSelectingTool={isSelectingTool} setNodes={setNodes} />
         </div>
       </div>
     </div>

@@ -1,18 +1,23 @@
 import { useEffect, useState } from "react";
 import type { Node as ReactFlowNode } from "@xyflow/react";
-import { DBNode } from "../../../home/types";
+import { DBNode } from "../../../../home/types";
 import axios from "axios";
 import ParameterForm from "./parameterForm";
 import { ToolFunction } from "./ToolsPanel";
+import { ModelPanel } from "./modelsPanel";
 
 export function TriggersAndNodes({
     setNodes,
     isSelectingTool,
-    setIsSelectingTool
+    setIsSelectingTool,
+    isSelectingModel,
+    setIsSelectingModel
   }: {
     setNodes: React.Dispatch<React.SetStateAction<ReactFlowNode[]>>;
-    isSelectingTool:boolean
+    isSelectingTool:boolean;
     setIsSelectingTool: React.Dispatch<React.SetStateAction<boolean>>;
+    isSelectingModel:boolean;
+    setIsSelectingModel: React.Dispatch<React.SetStateAction<boolean>>;
   }) {
     const [Nodes, SetNodes] = useState<DBNode[]>([]);
     const [selectedNodeType, setSelectedNodeType] = useState<string>("trigger");
@@ -35,7 +40,10 @@ export function TriggersAndNodes({
       getNodes();
     }, [selectedNodeType]);
   
-    return isSelectingTool? <ToolFunction nodes={Nodes} setIsSelectingTool={setIsSelectingTool} setNodes={setNodes} />:(
+    return isSelectingTool? <ToolFunction nodes={Nodes} setIsSelectingTool={setIsSelectingTool} setNodes={setNodes} />:
+    isSelectingModel?
+    <ModelPanel nodes={Nodes} setIsSelectingModel={setIsSelectingModel}  setNodes={setNodes}/>
+    :(
 
       <div className="w-full h-full text-white">
       <div className="flex w-full p-3 items-center">

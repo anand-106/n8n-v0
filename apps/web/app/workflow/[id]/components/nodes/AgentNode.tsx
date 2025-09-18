@@ -18,11 +18,12 @@ export function AgentNode({data}:NodeProps){
       />
 
       <Handle 
-      id='model-input'
-      type="target"
+      id='model-output'
+      type="source"
       position={Position.Bottom}
       style={{left:'25%'}}
-      isValidConnection={(connection)=>connection.sourceHandle==='model-output'}
+      isValidConnection={(connection)=>connection.targetHandle==='model-input'}
+      onClick={()=> {(data as any ).onSelectModel() }}
       />
 
     <Handle 

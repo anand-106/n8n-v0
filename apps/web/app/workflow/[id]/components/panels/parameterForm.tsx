@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Node } from "@xyflow/react";
-import { DBNode } from "../../../home/types";
+import { DBNode } from "../../../../home/types";
+
 
 export default function ParameterForm({
   selectedNode,
@@ -20,7 +21,7 @@ export default function ParameterForm({
       ...prev,
       {
         id: `nd_${uuidv4().slice(0, 8)}`,
-        type: selectedNode?.code=='AGENT'?'agent':'',
+        type: selectedNode?.type,
         data: { label: selectedNode?.name,parameters: parametersList,credentials: credentialsList,type:selectedNode?.type,code:selectedNode?.code},
         position: { x: 5, y: 5 },
         

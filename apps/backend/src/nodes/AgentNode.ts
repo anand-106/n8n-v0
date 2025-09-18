@@ -7,7 +7,8 @@ import { AdditionTool } from "./tools/AdditionTool";
 export class AgentNode {
   async execute(
     parameters: Record<string, any>,
-    credentials: Record<string, any>
+    credentials: Record<string, any>,
+    tools: any[] = []
   ) {
     const { modelName } = parameters;
     const { apiKey } = credentials;
@@ -18,7 +19,6 @@ export class AgentNode {
       temperature: 0,
     });
 
-    const tools = [multiplyTool,AdditionTool];
 
 
     const agent = createReactAgent({

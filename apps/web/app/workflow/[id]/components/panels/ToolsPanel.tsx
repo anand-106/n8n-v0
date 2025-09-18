@@ -1,4 +1,4 @@
-import { DBNode } from "../../../home/types";
+import { DBNode } from "../../../../home/types";
 import { Node } from "@xyflow/react";
 import { v4 as uuidv4 } from "uuid";
 
@@ -14,7 +14,7 @@ export function ToolFunction({nodes,setIsSelectingTool,setNodes}:
                 ...prev,
                 {
                   id: `nd_${uuidv4().slice(0, 8)}`,
-                  type: node?.code=='AGENT'?'agent':'',
+                  type: node.type,
                   data: { label: node?.name,parameters: {},credentials: {},type:node?.type,code:node?.code},
                   position: { x: 5, y: 5 },
                   

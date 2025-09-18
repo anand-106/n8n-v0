@@ -2,7 +2,7 @@ import { Iworkflow,Inode } from "../database/schema";
 import { v4 as uuidv4 } from "uuid";
 import { nodeQueue, nodeWorker } from "./queue";
 import { Workflows } from "../database/model";
-import { NodeRegistry } from "./nodeRegistry";
+import { NodeRegistry, ToolRegistry } from "./nodeRegistry";
 
 export interface ExecutionContext {
     // Execution metadata
@@ -78,12 +78,19 @@ export async function executeNode(nodeId:string,workflowId:string,executionId:st
 
     if(node?.type=='tool') return console.log(`Reached ${node.name}, and returning`)
 
+      let tools:any[] =[]
+
     if(node?.type=='agent'){
-      const outgoing = workflow?.connections?.filter(edge=>edge.source.node == node.id)
+      
+      const outgoing = workflow?.connections?.filter(edge=>edge.source.node == node.id) ?? []
 
-      const tools = outgoing?.map(c=>workflow?.nodes?.find(nd=>nd.id==c.destination.node))
+      const  toolNodes = outgoing?.map(c=>workflow?.nodes?.find(nd=>nd.id==c.destination.node))
 
-      console.log(tools)
+      // console.log(tools)
+
+      toolNodes.map(tln=>{
+        tools.push(ToolRegistry[tln?.code!])
+      })
     }
 
    const NodeClass = NodeRegistry[node?.code ?? ""]
@@ -94,7 +101,7 @@ export async function executeNode(nodeId:string,workflowId:string,executionId:st
 
    const nodeInstance = new NodeClass();
 
-   await nodeInstance.execute(node?.parameters,node?.credentials)
+   await nodeInstance.execute(node?.parameters,node?.credentials,tools)
 
 
 }

@@ -47,7 +47,8 @@ export class EmailNode {
 
     async execute(
         parameters: Record<string,any>,
-        credentials: Record<string,any>
+        credentials: Record<string,any>,
+        tools: any[] = []
     ) :Promise<{success:boolean}> {
         const {to,subject,body} = parameters
         const {user, pass} = credentials
