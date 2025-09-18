@@ -4,6 +4,7 @@
 import { useParams } from "next/navigation"
 import { Graph } from "./components/Graph"
 import axios from "axios"
+import { useWorkflowStore } from "./components/utils/storeSaveWF"
 
 export default function WorkflowPage(){
     const params = useParams()
@@ -16,11 +17,13 @@ export default function WorkflowPage(){
 
 function Execute(){
 
+    const saveWorkFlow = useWorkflowStore(s=>s.saveWorkFlow)
     const params= useParams()
 
     const id = params.id
 
     const handleExecute = ()=>{
+        saveWorkFlow && saveWorkFlow()
         axios.post('http://localhost:4000/workflow/execute',{
             id
         },{

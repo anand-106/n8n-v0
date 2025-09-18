@@ -73,7 +73,7 @@ export function TriggersAndNodes({
             />
           ) : (
             Nodes.map((node, idx) => {
-              if (node.type == "node" && selectedNodeType == "node") {
+              if ((node.type == "node" || node.type == 'agent') && selectedNodeType == "node") {
                 return (
                   <div
                     key={idx}

@@ -3,8 +3,9 @@ import DarkNode from "../nodes/DarkNode";
 import { AgentNode } from "../nodes/AgentNode";
 import { ToolNode } from "../nodes/ToolNode";
 import { ModelNode } from "../nodes/ModelNode";
+import { TriggerNode } from "../nodes/TriggerNode";
 
-export const nodeTypes= { node: DarkNode ,trigger:DarkNode,agent: AgentNode,tool:ToolNode, model:ModelNode};
+export const nodeTypes= { node: DarkNode ,trigger:TriggerNode,agent: AgentNode, tool:ToolNode, model:ModelNode };
 
 export const initialNodes: Node[] = [
   //   { id: '1', data: { label: 'Node 1' }, position: { x: 5, y: 5 } },

@@ -20,6 +20,7 @@ export interface Inode {
     type: string;
     code: string;
     position: [number,number];
+    icon?: string;
     parameters? : Record<string,any>;
     credentials? : Record<string,any>;
 }
@@ -28,6 +29,7 @@ export interface DBNode extends Document {
     name: string;
     type: string;
     code: string;
+    icon?: string;
     parameters? : Record<string,any>;
     credentials? : Record<string,any>;
 }
@@ -65,6 +67,7 @@ export const NodeSchema = new Schema<Inode>({
     name: String,
     type: String,
     code: String,
+    icon: String,
     position: {type:[Number],required:true},
     parameters: Schema.Types.Mixed,
     credentials: Schema.Types.Mixed
@@ -84,6 +87,7 @@ export const DBNodeSchema = new Schema<DBNode>({
     name:String,
     code: String,
     type:String,
+    icon: String,
     parameters: Schema.Types.Mixed,
     credentials: Schema.Types.Mixed
 })

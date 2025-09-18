@@ -1,9 +1,11 @@
+import { Inode } from "../database/schema";
 import { ExecutionContext } from "../services/executionService";
 
 export class ManualTrigger{
     async execute(parameters: Record<string,any>,
         credentials: Record<string,any>,
-        tools: any[] = []
+        tools: any[] = [],
+        model:any
     ) :Promise<{success:boolean}>{
         console.log("mannual trigger executed")
 

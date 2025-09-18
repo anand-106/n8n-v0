@@ -21,6 +21,7 @@ import { IConnection, INode, Iworkflow } from "../../../home/types";
 import { useParams } from "next/navigation";
 import { initialNodes, initialEdges, nodeTypes, fitViewOptions, defaultEdgeOptions, onNodeDrag } from "./utils/graphData";
 import { TriggersAndNodes } from "./panels/TriggersAndNodes";
+import { useWorkflowStore } from "./utils/storeSaveWF";
 
 
 export function Graph({ workflowId }: { workflowId: string }) {
@@ -29,10 +30,11 @@ export function Graph({ workflowId }: { workflowId: string }) {
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
   const [isSelectingTool,setIsSelectingTool] = useState<boolean>(false)
   const [isSelectingModel,setIsSelectingModel] = useState<boolean>(false)
+  const [workflow, setWorkflow] = useState<Iworkflow>();
 
   const params = useParams();
 
-  const [workflow, setWorkflow] = useState<Iworkflow>();
+  const setSaveWorkFlow = useWorkflowStore(state=>state.setSaveWorkFlow)
 
 
   const getWorkflow = () => {
@@ -57,6 +59,7 @@ export function Graph({ workflowId }: { workflowId: string }) {
               label: node.name,
               type: node.type,
               code: node.code,
+              icon: node.icon,
               parameters: node.parameters,
               credentials: node.credentials,
               onSelectTool: ()=> setIsSelectingTool(true),
@@ -136,6 +139,7 @@ export function Graph({ workflowId }: { workflowId: string }) {
         name: node.data.label as string,
         type: node.data.type as string,
         code: node.data.code as string,
+        icon: node.data.icon as string,
         position: [node.position.x, node.position.y],
         parameters: node.data.parameters as Record<string, unknown> | undefined,
         credentials: node.data.credentials as
@@ -181,6 +185,13 @@ export function Graph({ workflowId }: { workflowId: string }) {
       })
       .catch(console.error);
   };
+
+  useEffect(()=>{
+    setSaveWorkFlow(SaveWf)
+
+  },[SaveWf,setSaveWorkFlow])
+
+  
 
   return (
     <div className="flex flex-col">

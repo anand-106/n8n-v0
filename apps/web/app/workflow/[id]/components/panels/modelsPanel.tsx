@@ -1,9 +1,7 @@
 
 import { Node } from "@xyflow/react";
-import { v4 as uuidv4 } from "uuid";
 import { DBNode } from "../../../../home/types";
 import { useState } from "react";
-import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
 import ParameterForm from "./parameterForm";
 
 export function ModelPanel({nodes,setIsSelectingModel,setNodes}:

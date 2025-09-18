@@ -3,15 +3,17 @@ import {HumanMessage} from '@langchain/core/messages'
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { multiplyTool } from "./tools/MultiplyTool";
 import { AdditionTool } from "./tools/AdditionTool";
+import { Inode } from "../database/schema";
 
 export class AgentNode {
   async execute(
     parameters: Record<string, any>,
     credentials: Record<string, any>,
-    tools: any[] = []
+    tools: any[] = [],
+    model:any
   ) {
-    const { modelName } = parameters;
-    const { apiKey } = credentials;
+    const { modelName } = model.parameters!;
+    const { apiKey } = model.credentials!;
 
     const llm = new ChatGoogleGenerativeAI({
       model: modelName || "gemini-2.0-flash",

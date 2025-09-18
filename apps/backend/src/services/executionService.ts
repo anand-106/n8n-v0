@@ -76,9 +76,10 @@ export async function executeNode(nodeId:string,workflowId:string,executionId:st
 
     const node = workflow?.nodes?.find(nd=>nd.id===nodeId)
 
-    if(node?.type=='tool') return console.log(`Reached ${node.name}, and returning`)
+    if(node?.type=='tool' || node?.type=='model') return console.log(`Reached ${node.name}, and returning`)
 
       let tools:any[] =[]
+      let model:any;
 
     if(node?.type=='agent'){
       
@@ -89,7 +90,13 @@ export async function executeNode(nodeId:string,workflowId:string,executionId:st
       // console.log(tools)
 
       toolNodes.map(tln=>{
-        tools.push(ToolRegistry[tln?.code!])
+        if(tln?.type=='model'){
+          model = tln
+        }
+        else{
+
+          tools.push(ToolRegistry[tln?.code!])
+        }
       })
     }
 
@@ -101,7 +108,7 @@ export async function executeNode(nodeId:string,workflowId:string,executionId:st
 
    const nodeInstance = new NodeClass();
 
-   await nodeInstance.execute(node?.parameters,node?.credentials,tools)
+   await nodeInstance.execute(node?.parameters,node?.credentials,tools,model)
 
 
 }

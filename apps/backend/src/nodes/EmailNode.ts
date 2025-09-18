@@ -2,6 +2,7 @@
 import { ExecutionContext } from "../services/executionService";
 import nodemailer from 'nodemailer'
 import { CredentialSchema, ParameterSchema } from "./types";
+import { Inode } from "../database/schema";
 
 export class EmailNode {
 
@@ -48,7 +49,8 @@ export class EmailNode {
     async execute(
         parameters: Record<string,any>,
         credentials: Record<string,any>,
-        tools: any[] = []
+        tools: any[] = [],
+        model:any
     ) :Promise<{success:boolean}> {
         const {to,subject,body} = parameters
         const {user, pass} = credentials

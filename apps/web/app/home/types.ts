@@ -15,6 +15,7 @@ export interface INode {
     name: string;
     type: string;
     code: string;
+    icon?: string;
     position: [number,number];
     parameters? : Record<string,unknown>;
     credentials? : Record<string,unknown>;
@@ -55,6 +56,7 @@ export interface DBNode extends Document {
     name: string;
     code:string;
     type: string;
+    icon?: string;
     parameters? : Record<string,ParameterSchema>;
     credentials? : Record<string,CredentialSchema>;
 }
