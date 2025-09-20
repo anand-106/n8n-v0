@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from "uuid";
 import { nodeQueue, nodeWorker } from "./queue";
 import { Workflows } from "../database/model";
 import { NodeRegistry, ToolRegistry } from "./nodeRegistry";
+import { DynamicTool } from "@langchain/core/tools";
+import { ToolInput } from "../nodes/types";
 
 export interface ExecutionContext {
     // Execution metadata
@@ -70,11 +72,14 @@ export async function executeFromNode(currentNode:Inode,Workflow:Iworkflow,execu
 }
 
 
+
 export async function executeNode(nodeId:string,workflowId:string,executionId:string){
     console.log("executing node",nodeId)
     const workflow = await Workflows.findOne({id:workflowId})
 
     const node = workflow?.nodes?.find(nd=>nd.id===nodeId)
+
+    
 
     if(node?.type=='tool' || node?.type=='model') return console.log(`Reached ${node.name}, and returning`)
 
@@ -95,7 +100,28 @@ export async function executeNode(nodeId:string,workflowId:string,executionId:st
         }
         else{
 
-          tools.push(ToolRegistry[tln?.code!])
+        const  baseTool = ToolRegistry[tln?.code!];
+
+        const wrappedTool = new DynamicTool({
+          name:baseTool.name,
+          description: baseTool.description,
+          func: async(input:string)=>{
+
+            const ToolData: ToolInput = {
+              workflow: workflowId,
+              nodeId: tln?.id!,
+              parameters: tln?.parameters!,
+              credentials: tln?.credentials!,
+              executionId:executionId
+            }
+            return await baseTool.func({
+              AgentData:input,
+              ToolData:ToolData
+            })
+          }
+        })
+
+          tools.push(wrappedTool)
         }
       })
     }
@@ -107,6 +133,8 @@ export async function executeNode(nodeId:string,workflowId:string,executionId:st
    }
 
    const nodeInstance = new NodeClass();
+
+  //  console.log("the tools are ",tools)
 
    await nodeInstance.execute(node?.parameters,node?.credentials,tools,model)
 

@@ -32,6 +32,9 @@ importers:
       '@langchain/langgraph':
         specifier: ^0.4.9
         version: 0.4.9(@langchain/core@0.3.75(openai@5.12.2(ws@8.18.3)(zod@4.1.8)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(zod-to-json-schema@3.24.6(zod@4.1.8))
+      axios:
+        specifier: ^1.11.0
+        version: 1.11.0(debug@4.4.1)
       bullmq:
         specifier: ^5.58.5
         version: 5.58.5

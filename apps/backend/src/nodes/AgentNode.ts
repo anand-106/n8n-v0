@@ -29,7 +29,7 @@ export class AgentNode {
       });
 
       const response = await agent.invoke({
-        messages: [new HumanMessage("add 6 and 7 and multiply by 2")],
+        messages: [new HumanMessage("tell me some random joke")],
       });
 
       
