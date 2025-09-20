@@ -6,6 +6,8 @@ import axios from "axios";
 import "@xyflow/react/dist/style.css";
 import {
   ReactFlow,
+  Background,
+  BackgroundVariant,
   addEdge,
   applyNodeChanges,
   applyEdgeChanges,
@@ -226,7 +228,12 @@ export function Graph({ workflowId }: { workflowId: string }) {
             fitView
             fitViewOptions={fitViewOptions}
             defaultEdgeOptions={defaultEdgeOptions}
-          />
+          >
+            <Background
+            variant={BackgroundVariant.Dots}
+
+            />
+            </ReactFlow>
         </div>
         <div className="flex-1">
           <TriggersAndNodes setIsSelectingModel={setIsSelectingModel} isSelectingModel={isSelectingModel} setIsSelectingTool={setIsSelectingTool} isSelectingTool={isSelectingTool} setNodes={setNodes} />
