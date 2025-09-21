@@ -7,11 +7,15 @@ import { DBNode } from "../../../../home/types";
 export default function ParameterForm({
   selectedNode,
   setNodes,
-  setAddingNode
+  setAddingNode,
+  onSelectTool,
+  onSelectModel,
 }: {
   selectedNode: DBNode | undefined;
   setNodes: React.Dispatch<React.SetStateAction<Node[]>>;
   setAddingNode: React.Dispatch<React.SetStateAction<boolean>>;
+  onSelectTool?: ()=>void,
+  onSelectModel?: ()=>void 
 }) {
   const [parametersList, setParametersList] = useState<Record<string, any>>({});
   const [credentialsList, setCredentialsList] =  useState<Record<string, any>>({});
@@ -31,7 +35,16 @@ export default function ParameterForm({
       {
         id: `nd_${uuidv4().slice(0, 8)}`,
         type: selectedNode?.type,
-        data: { label: selectedNode?.name,parameters: parametersList,credentials: credentialsList,type:selectedNode?.type,code:selectedNode?.code,icon: selectedNode?.icon},
+        data: { 
+          label: selectedNode?.name,
+          parameters: parametersList,
+          credentials: credentialsList,
+          type:selectedNode?.type,
+          code:selectedNode?.code,
+          icon: selectedNode?.icon,
+          onSelectTool,
+          onSelectModel
+        },
         position: { x: 5, y: 5 },
         
       },

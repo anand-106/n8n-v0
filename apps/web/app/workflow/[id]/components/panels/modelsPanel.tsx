@@ -4,10 +4,11 @@ import { DBNode } from "../../../../home/types";
 import { useState } from "react";
 import ParameterForm from "./parameterForm";
 
-export function ModelPanel({nodes,setIsSelectingModel,setNodes}:
+export function ModelPanel({nodes,setIsSelectingModel,setNodes,setIsSelectingTool}:
     {
         nodes:DBNode[],
         setIsSelectingModel: React.Dispatch<React.SetStateAction<boolean>>;
+        setIsSelectingTool: React.Dispatch<React.SetStateAction<boolean>>;
         setNodes: React.Dispatch<React.SetStateAction<Node[]>>;
     }){
 
@@ -26,7 +27,7 @@ export function ModelPanel({nodes,setIsSelectingModel,setNodes}:
         //         },
         //       ]);
         // };
-    return isAddingModel? <ParameterForm selectedNode={selectedNode} setAddingNode={setIsAddingModel} setNodes={setNodes}/> :<div className="p-3 text-white">
+    return isAddingModel? <ParameterForm selectedNode={selectedNode} setAddingNode={setIsAddingModel} setNodes={setNodes} onSelectTool={()=>setIsSelectingTool(true) } onSelectModel={()=>setIsSelectingModel(true)} />  :<div className="p-3 text-white">
         <div className="flex justify-between items-center mb-3">
 
         <h1 className="text-lg font-bold">Models</h1>

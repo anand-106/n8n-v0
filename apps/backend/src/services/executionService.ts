@@ -104,7 +104,7 @@ export async function executeNode(nodeId:string,workflowId:string,executionId:st
 
         const wrappedTool = new DynamicTool({
           name:baseTool.name,
-          description: baseTool.description,
+          description: tln?.parameters!.description || baseTool.description,
           func: async(input:string)=>{
 
             const ToolData: ToolInput = {

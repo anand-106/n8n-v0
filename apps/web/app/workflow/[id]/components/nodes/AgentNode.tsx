@@ -35,7 +35,7 @@ export function AgentNode({data,id}:NodeProps){
         const isConnected = edges.some(ed=>ed.source==id && ed.sourceHandle=='model-output')
         
         return !isConnected && connection.targetHandle==='model-input'}}
-      onClick={()=> {(data as any ).onSelectModel() }}
+      onClick={()=> {(data as any ).onSelectModel?.() }}
       />
 
     <Handle 
@@ -44,7 +44,7 @@ export function AgentNode({data,id}:NodeProps){
       position={Position.Bottom}
       style={{left:'75%' ,background: '#ffffff', width: '8px' ,height: '8px'  }}
       isValidConnection={(connection)=>connection.targetHandle==='tool-input'}
-      onClick={()=> {(data as any ).onSelectTool() }}
+      onClick={()=> {(data as any ).onSelectTool?.() }}
       />
 
     </div>

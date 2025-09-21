@@ -4,10 +4,11 @@ import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import ParameterForm from "./parameterForm";
 
-export function ToolFunction({nodes,setIsSelectingTool,setNodes}:
+export function ToolFunction({nodes,setIsSelectingTool,setIsSelectingModel,setNodes}:
     {
         nodes:DBNode[],
         setIsSelectingTool: React.Dispatch<React.SetStateAction<boolean>>;
+        setIsSelectingModel: React.Dispatch<React.SetStateAction<boolean>>;
         setNodes: React.Dispatch<React.SetStateAction<Node[]>>;
     }){
 
@@ -25,7 +26,7 @@ export function ToolFunction({nodes,setIsSelectingTool,setNodes}:
         //         },
         //       ]);
         // }
-    return isAddingModel? <ParameterForm selectedNode={selectedNode} setAddingNode={setIsAddingModel} setNodes={setNodes}/> :<div className="p-3 text-white">
+    return isAddingModel? <ParameterForm selectedNode={selectedNode} setAddingNode={setIsAddingModel} setNodes={setNodes} onSelectTool={()=>setIsSelectingTool(true)} onSelectModel={()=>setIsSelectingModel(true)} />  :<div className="p-3 text-white">
         <div className="flex justify-between items-center mb-3">
 
         <h1 className="text-lg font-bold">Tools</h1>

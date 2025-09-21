@@ -14,6 +14,7 @@ export class AgentNode {
   ) {
     const { modelName } = model.parameters!;
     const { apiKey } = model.credentials!;
+    const {query } = parameters
 
     const llm = new ChatGoogleGenerativeAI({
       model: modelName || "gemini-2.0-flash",
@@ -29,7 +30,7 @@ export class AgentNode {
       });
 
       const response = await agent.invoke({
-        messages: [new HumanMessage("tell me some random joke")],
+        messages: [new HumanMessage(query)],
       });
 
       

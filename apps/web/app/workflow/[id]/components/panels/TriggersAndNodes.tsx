@@ -40,9 +40,9 @@ export function TriggersAndNodes({
       getNodes();
     }, [selectedNodeType]);
   
-    return isSelectingTool? <ToolFunction nodes={Nodes} setIsSelectingTool={setIsSelectingTool} setNodes={setNodes} />:
+    return isSelectingTool? <ToolFunction nodes={Nodes} setIsSelectingTool={setIsSelectingTool} setNodes={setNodes} setIsSelectingModel={setIsSelectingModel} />:
     isSelectingModel?
-    <ModelPanel nodes={Nodes} setIsSelectingModel={setIsSelectingModel}  setNodes={setNodes}/>
+    <ModelPanel nodes={Nodes} setIsSelectingModel={setIsSelectingModel}  setNodes={setNodes} setIsSelectingTool={setIsSelectingTool} />
     :(
 
       <div className="w-full h-full text-white">
@@ -70,6 +70,8 @@ export function TriggersAndNodes({
               setAddingNode={setAddingNode}
               setNodes={setNodes}
               selectedNode={selectedNode}
+              onSelectTool={() => setIsSelectingTool(true)}
+              onSelectModel={() => setIsSelectingModel(true)}
             />
           ) : (
             Nodes.map((node, idx) => {
